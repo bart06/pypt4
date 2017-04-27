@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="pix">
+    <file>bird.png</file>
+    <file>exit.png</file>
+    <file>myapp.qrc</file>
+    <file>star.png</file>
+    <file>密码.png</file>
+    <file>用户名.png</file>
+  </qresource>
+</RCC>

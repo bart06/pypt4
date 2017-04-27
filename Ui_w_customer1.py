@@ -137,7 +137,7 @@ class customer_Dialog(object):
         self.current_customer=[None, None,None,None,None,None,None,None, None]
         if  onecust:
             self.current_customer=onecust
-#            print self.customer
+            print '设置客户内容', self.current_customer
             self.lineEdit_name.setText(_translate("Dialog", unicode(self.current_customer[1]), None))
             self.lineEdit_sex.setText(_translate("Dialog", unicode(self.current_customer[2]), None))
             self.lineEdit_age.setText(_translate("Dialog",unicode(self.current_customer[3])  , None))
@@ -149,7 +149,7 @@ class customer_Dialog(object):
         self.mainw=None
         self.retranslateUi(Dialog)
         QtCore.QObject.connect(self.pushButton_ok, QtCore.SIGNAL(_fromUtf8("clicked()")), self.accept)
-        QtCore.QObject.connect(self.pushButton_cancel, QtCore.SIGNAL(_fromUtf8("clicked()")), Dialog.close)
+        QtCore.QObject.connect(self.pushButton_cancel, QtCore.SIGNAL(_fromUtf8("clicked()")), self.back)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -167,7 +167,12 @@ class customer_Dialog(object):
         self.pushButton_cancel.setText(_translate("Dialog", "取消", None))
         print(Dialog)
     
-
+    def  back(self):
+        
+        self.mainw=MyQQ()
+        self.mainw.show()
+        self.dlg.hide()
+        
     def  accept(self):
 
         if not self.current_customer[0]:

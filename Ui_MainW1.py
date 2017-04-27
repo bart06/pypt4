@@ -136,9 +136,9 @@ class MyQQ(QTabWidget):
         
     def import_customer(self):
         print 'import_customer'
-        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './*.csv', '.csv')
+        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './*.xls', '.xls')
         path,file=os.path.split(unicode(filename)); 
-        if file==u'customer.csv':
+        if file==u'客户导入模板.xls':
             msgBox = QtGui.QMessageBox()
             msgBox.setWindowTitle(u'操作提示')
             msgBox.setText(u'是否要导入客户信息？')
@@ -146,22 +146,12 @@ class MyQQ(QTabWidget):
             msgBox.setDefaultButton(QMessageBox.Yes);
             ret = msgBox.exec_()
             if ret == QMessageBox.Yes:
-                
+                from read_excel import  xlstodb
+                xlstodb(unicode(filename))
                 msgBox.setText(u'导入完成')
                 msgBox.setStandardButtons(QMessageBox.Yes);
                 msgBox.exec_()
-        elif file==u'cust_plan.csv':
-            msgBox = QtGui.QMessageBox()
-            msgBox.setWindowTitle(u'操作提示')
-            msgBox.setText(u'是否要导入客户提示计划信息？')
-            msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No);
-            msgBox.setDefaultButton(QMessageBox.Yes);
-            ret = msgBox.exec_()
-            if ret == QMessageBox.Yes:
-                
-                msgBox.setText(u'导入完成')
-                msgBox.setStandardButtons(QMessageBox.Yes);
-                msgBox.exec_()
+    
         else:
             msgBox = QtGui.QMessageBox()
             msgBox.setWindowTitle(u'操作提示')

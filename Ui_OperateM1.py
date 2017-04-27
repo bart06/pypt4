@@ -146,6 +146,9 @@ class Ui_OperateDialog(object):
         self.label_9 = QtGui.QLabel(self.gridLayoutWidget)
         self.label_9.setObjectName(_fromUtf8("label_9"))
         self.gridLayout.addWidget(self.label_9, 4, 0, 1, 1)
+        self.radioButton_custtip = QtGui.QRadioButton(self.gridLayoutWidget)
+        self.radioButton_custtip.setObjectName(_fromUtf8("radioButton_2"))
+        self.gridLayout.addWidget(self.radioButton_custtip, 5, 0, 1, 4)
         self.groupBox_2 = QtGui.QGroupBox(Dialog)
         self.groupBox_2.setGeometry(QtCore.QRect(140, 350, 251, 31))
         self.groupBox_2.setObjectName(_fromUtf8("groupBox_2"))
@@ -168,10 +171,14 @@ class Ui_OperateDialog(object):
         self.current_customer=[]
         self.current_customer_id=None
         
+        from Ui_w_customer2 import customer_Dialog
+        self.dg_cplan=QtGui.QDialog()
+        self.optDg = customer_Dialog()
+        
 
         self.retranslateUi(Dialog)
         QtCore.QObject.connect(self.button_ok, QtCore.SIGNAL(_fromUtf8("clicked()")), self.on_button_ok_accepted)
-        QtCore.QObject.connect(self.button_cancel, QtCore.SIGNAL(_fromUtf8("clicked()")), Dialog.reject)
+        QtCore.QObject.connect(self.button_cancel, QtCore.SIGNAL(_fromUtf8("clicked()")), Dialog.hide)
         QtCore.QObject.connect(self.radioButton_xm, QtCore.SIGNAL(_fromUtf8("clicked()")), self.on_radioButton_xm_clicked)
         QtCore.QObject.connect(self.radioButton_dq, QtCore.SIGNAL(_fromUtf8("clicked()")), self.on_radioButton_dq_clicked)
         QtCore.QObject.connect(self.radioButton_bz, QtCore.SIGNAL(_fromUtf8("clicked()")), self.on_radioButton_bz_clicked)
@@ -209,6 +216,7 @@ class Ui_OperateDialog(object):
         self.comboBox_xb.setItemText(0, _translate("select", "请选择", None))
         self.comboBox_xb.setItemText(1, _translate("select", "男", None))
         self.comboBox_xb.setItemText(2, _translate("select", "女", None))
+        self.radioButton_custtip.setText(_translate("Dialog", "是否添加客户提示计划", None))
         self.button_ok.setText(u'确定')
         self.button_cancel.setText(u'取消')
         self.read_only_true()
@@ -223,6 +231,7 @@ class Ui_OperateDialog(object):
         self.lineEdit_dz.setReadOnly(True)
         self.lineEdit_email.setReadOnly(True)
         self.textEdit_bz.setReadOnly(True)
+        self.radioButton_custtip.setEnabled(False)
     
     def read_only_false(self):
         self.lineEdit_xm.setReadOnly(False)
@@ -233,6 +242,7 @@ class Ui_OperateDialog(object):
         self.lineEdit_dz.setReadOnly(False)
         self.lineEdit_email.setReadOnly(False)
         self.textEdit_bz.setReadOnly(False)
+        self.radioButton_custtip.setEnabled(True)
         
     def clean_text(self):
         self.lineEdit_xm.setText(u'')
@@ -440,6 +450,7 @@ class Ui_OperateDialog(object):
         elif self.radioButton_modify.isChecked() :
             self.click_ok_operate('modify', self.gettext())
             
+            
         elif self.radioButton_delete.isChecked() :
             self.click_ok_operate('delete', self.gettext())
     
@@ -478,6 +489,18 @@ class Ui_OperateDialog(object):
                 sqldb=mydb()
                 sqldb.updatecustomer(cust, self.current_customer_id)
                 self.clean_text()
+                if self.radioButton_custtip.isChecked():
+                    msgBox = QtGui.QMessageBox()
+                    msgBox.setWindowTitle(u'操作提示')
+                    msgBox.setText(u'是否要添加客户提示计划？')
+                    msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No);
+                    msgBox.setDefaultButton(QMessageBox.Yes);
+                    ret = msgBox.exec_()
+                    if ret == QMessageBox.Yes:
+                        cust.insert(0, self.current_customer_id)
+                        print cust
+                        self.optDg.setupUi(self.dg_cplan,cust)
+                        self.dg_cplan.show()
                 
         if type=='delete':
             msgBox = QtGui.QMessageBox()

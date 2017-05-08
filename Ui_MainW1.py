@@ -25,20 +25,30 @@ class MyQQ(QTabWidget):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("pix/bird.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.setWindowIcon(icon)
+        self.isTopLevel()
+        self.trayIcon = QtGui.QSystemTrayIcon(self) #设置托盘
+        self.trayIcon.setIcon(icon)                 #设置托盘图标
+        self.trayIcon.show()
+        self.trayIcon.setToolTip(u"客户系统")  # 托盘信息
+        self.restoreAction = QAction(u"还原", self, triggered=self.showNormal)
+        self.quitAction = QAction(u"退出", self, triggered=self.close)
+        self.Menu()  # 右键菜单
+
+
         self.current_custmer_name=None
         self.current_custmer=[]
         
         #加入客户操作编辑类
-        from Ui_OperateM1 import Ui_OperateDialog
-        self.dg_operator=QtGui.QDialog()
-        self.opt_cust = Ui_OperateDialog()
-        self.opt_cust.setupUi(self.dg_operator)
-        
-        
-        from Ui_w_customer1 import customer_Dialog
-        self.dg_customer=QtGui.QDialog()
-        self.optDg = customer_Dialog()
-        
+        # from Ui_OperateM1 import Ui_OperateDialog
+        # self.dg_operator=QtGui.QDialog()
+        # self.opt_cust = Ui_OperateDialog()
+        # self.opt_cust.setupUi(self.dg_operator)
+        #
+        #
+        # from Ui_w_customer1 import customer_Dialog
+        # self.dg_customer=QtGui.QDialog()
+        # self.optDg = customer_Dialog()
+        #
         
         
         groupbox1=QGroupBox()  
@@ -158,7 +168,7 @@ class MyQQ(QTabWidget):
             msgBox.setText(u'您选择的不是指定的模板文件')
             msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No);
             msgBox.setDefaultButton(QMessageBox.Yes);
-            msgBox.exec_()      
+            msgBox.exec_()
             
         
     def onecust_clicked(self):
@@ -170,13 +180,26 @@ class MyQQ(QTabWidget):
         self.dg_customer.show()
         self.hide()
 
-    
+    def closeEvent(self,event):
+        reply=QMessageBox.question(self, u'操作提示',u'是否退出?',QMessageBox.Yes|QMessageBox.No,QMessageBox.No)
+        if reply==QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
     
     def toside(self):
         screen = QtGui.QDesktopWidget().screenGeometry()
         size =  self.geometry()
 #        self.move((screen.width()-size.width()) , (screen.height()-size.height()))
         self.setGeometry ((screen.width()-size.width())+320 , (screen.height()-size.height())-130, 200, 390)
+
+    def Menu(self):
+
+        self.trayIconMenu = QtGui.QMenu(self)
+        self.trayIconMenu.addAction(self.restoreAction)
+        self.trayIconMenu.addSeparator()  # 间隔线
+        self.trayIconMenu.addAction(self.quitAction)
+        self.trayIcon.setContextMenu(self.trayIconMenu)  # 右击托盘
     
 
 if __name__ == "__main__":
